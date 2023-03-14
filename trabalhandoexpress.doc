@@ -12,3 +12,11 @@ script jQuery e script Popper colocar no HTML abaaixo do body
 
 Documentação do bootstrap
  Navbar é tipo um cabeçalho  
+
+***************************
+ instalar dois modulos 
+
+ npm install --save express-session
+ npm install --save connect-flash
+
+ carrear esses modulos no servidor 

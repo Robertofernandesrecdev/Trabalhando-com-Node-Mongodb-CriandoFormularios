@@ -1,14 +1,14 @@
 // configurar as variaveis de ambiente do mongo/bin, criar uma pasta data/db em c:
 //em outro cmd tem que deixar o mongod rodando!
 //****---------********* */
-//instala o mongoose npm install --save mongoose 
-// conecxão com o Mongodb  configuração do mongoose   
+//instala o mongoose npm install --save mongoose
+// conecxão com o Mongodb  configuração do mongoose
 // const mongoose = require("mongoose")
 
-// mongoose.Promise = global.Promise; 
+// mongoose.Promise = global.Promise;
 // mongoose.connect("mongodb://localhost/bancocriado",
 //     {
-//         //useMongoClient: true  // gerou um erro 
+//         //useMongoClient: true  // gerou um erro
 //     }).then(() => {
 //     console.log("MongoDB Conectado")
 
@@ -64,5 +64,7 @@
 // show databases para listar os bancos criados
 // use + banco que foi criado
 // show collections verificar o models criados
-// db.usuarios.find() vai listar os usuários listados 
+// db.usuarios.find() vai listar os usuários listados
 // deletar um usuario por id =  db.test_users.deleteOne( {"_id": ObjectId("4d512b45cc9374271b02ec4f")});
+//db.categorias.remove({"_id": ObjectId("641097584caa812110b0428a")});
+// deletando pelo n0me db.categorias.remove({nome: "springboot"});
