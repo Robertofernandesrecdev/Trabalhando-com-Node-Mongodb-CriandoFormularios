@@ -1,0 +1,14 @@
+// instalar as dependencias de desenvolvimento
+// npm install --save express
+// npm install --save express-handlebars -> Handlebars é um processador de templates que gera a tua página HTML dinamicamente
+// npm install body-parser --save -> O body-parser é um módulo capaz de converter o body da requisição para vários formatos.
+// npm install --save mongoose -> O Mongoose fornece uma maneira fácil de modelar seus dados com o MongoDB.
+
+para usar o bootstrap vai no site baixa o arquivo zip e descompacta e coloca na pasta do projeto!
+public  e coloca o bootstrap
+
+pegar os links no site do bootstrap das bibliotecas para funcionar 
+script jQuery e script Popper colocar no HTML abaaixo do body
+
+Documentação do bootstrap
+ Navbar é tipo um cabeçalho  
