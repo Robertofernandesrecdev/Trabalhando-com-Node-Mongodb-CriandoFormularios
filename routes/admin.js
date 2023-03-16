@@ -3,6 +3,8 @@ const router = express.Router()
 const mongoose = require("mongoose")
 require("../models/Categoria")
 const Categoria = mongoose.model("categorias")
+require('../models/Postagem')
+const Postagem = mongoose.model("postagens")
 
 router.get('/', (req, res) => {
     res.render("admin/index")
@@ -118,8 +120,75 @@ router.post("/categorias/deletar", (req, res) => {
         req.flash("error_msg", "Houve um erro ao Deletar")
         res.redirect("/categorias")
     })
+})
+    
+router.get("/postagens", (req, res) => {
+    Postagem.find().lean().populate("categoria").sort({ data: "desc" }).then((postagens) => {
+        res.render("admin/postagens", {postagens: postagens})
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao listar as postagens")
+        res.redirect("/")
     })
+})
 
+router.get("/postagens/add", (req, res) => {
+    Categoria.find().lean().then((categorias) => {
+        
+        res.render("admin/addpostagens", {categorias:categorias })
+    }).catch((err) => {
+        res.flash("error_msg", "Houve um erro ao carregar o formulário")
+        res.redirect("/")
+    })
+})
+
+router.post("/postagens/nova", (req, res) => {
+    var erros = []
+
+    if (!req.body.titulo || typeof req.body.titulo == undefined || req.body.titulo == null) {
+        erros.push({ texto: "Titulo inválido" })
+    }
+    if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null) {
+        erros.push({ texto: "Slug inválido" })
+    }
+    if (req.body.titulo.length < 3) {
+        erros.push({ texto: "titulo muito pequeno" })
+    }
+    if (!req.body.descricao || typeof req.body.descricao == undefined || req.body.descricao == null) {
+        erros.push({ texto: "Descrição inválida" })
+    }
+    if (!req.body.conteudo || typeof req.body.conteudo == undefined || req.body.conteudo == null) {
+        erros.push({ texto: "Conteúdo inválido" })
+    }
+    if (req.body.conteudo.length < 15) {
+        erros.push({ texto: "Conteúdo muito pequeno" })
+    }
+    if (req.body.descricao.length < 10) {
+        erros.push({ texto: "Descrição muito pequena" })
+    }
+
+    if (req.body.categoria == "0") {
+        erros.push({texto: "Não a categorias cadastradas!"})
+    }
+    if (erros.length > 0) {
+        res.render("admin/addpostagens", {erros: erros})
+    } else {
+        const novaPostagem = {
+            titulo: req.body.titulo,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            categoria: req.body.categoria,
+            slug: req.body.slug
+        }
+
+        new Postagem(novaPostagem).save().then(() => {
+            req.flash("success_msg", "Postagem criada com sucesso")
+            res.redirect("/postagens")
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao salvar a postagem")
+            res.redirect("/postagens")
+        })
+    }
+})
 
 
 
