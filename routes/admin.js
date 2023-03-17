@@ -190,6 +190,109 @@ router.post("/postagens/nova", (req, res) => {
     }
 })
 
+router.get("/postagens/edit/:id", (req, res) => {
+
+    Postagem.findOne({ _id: req.params.id }).lean().then((postagem) => {
+        
+        Categoria.find().lean().then((categorias) => {
+            res.render("admin/editpostagens", {categorias: categorias, postagem: postagem} )
+        }).catch((err) => {
+            req.flash("error_msg", "Houve um erro ao listar categorias")
+            res.redirect("/postagens")
+        })
+
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao carregar o form/edição")
+        res.redirect("/postagens")
+    })
+    
+})
+
+router.post("/postagem/edit", (req, res) => {
+
+    var erros = []
+
+    if (!req.body.titulo || typeof req.body.titulo == undefined || req.body.titulo == null) {
+        erros.push({ texto: "Titulo inválido" })
+    }
+    if (!req.body.slug || typeof req.body.slug == undefined || req.body.slug == null) {
+        erros.push({ texto: "Slug inválido" })
+    }
+    if (req.body.titulo.length < 3) {
+        erros.push({ texto: "titulo muito pequeno" })
+    }
+    if (!req.body.descricao || typeof req.body.descricao == undefined || req.body.descricao == null) {
+        erros.push({ texto: "Descrição inválida" })
+    }
+    if (!req.body.conteudo || typeof req.body.conteudo == undefined || req.body.conteudo == null) {
+        erros.push({ texto: "Conteúdo inválido" })
+    }
+    if (req.body.conteudo.length < 15) {
+        erros.push({ texto: "Conteúdo muito pequeno" })
+    }
+    if (req.body.descricao.length < 10) {
+        erros.push({ texto: "Descrição muito pequena" })
+    }
+
+    if (req.body.categoria == "0") {
+        erros.push({ texto: "Não a categorias cadastradas!" })
+    }
+    
+    if (erros.length > 0) {
+        res.render("admin/addpostagens", { erros: erros })
+    } else {
+        const editPostagem = {
+            titulo: req.body.titulo,
+            descricao: req.body.descricao,
+            conteudo: req.body.conteudo,
+            categoria: req.body.categoria,
+            slug: req.body.slug
+        }
+
+        Postagem.findOne({ _id: req.body.id }).then((postagem) => {
+        
+            postagem.titulo = req.body.titulo
+            postagem.slug = req.body.slug
+            postagem.descricao = req.body.descricao
+            postagem.conteudo = req.body.conteudo
+            postagem.categoria = req.body.categoria
+
+            postagem.save().then(() => {
+                req.flash("success_msg", "Postagem editada com sucesso")
+                res.redirect("/postagens")
+            }).catch((err) => {
+                req.flash("error_msg", "Erro interno")
+                res.redirect("/postagens")
+            })
+
+        }).catch((err) => {
+           // console.log(err)
+            req.flash("error_msg", "Houve um erro ao salvar a edição")
+            res.redirect("/postagens")
+        })
+    
+    }
+})
+
+
+// Outra maneira de deletar mais não recomendada pois é um get
+// router.get("/postagens/deletar/:id", (req, res) => {
+//     Postagem.deleteOne({ _id: req.params.id }).then(() => {
+//         res.redirect("/postagens")
+//     })
+// })
+
+router.post("/postagens/deletar", (req, res) => {
+    Postagem.deleteOne({ _id: req.body.id }).then(() => {
+       
+        req.flash("success_msg", "Postagem Deletada com sucesso")
+        res.redirect("/postagens")
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro ao Deletar")
+        res.redirect("/postagens")
+    })
+})
+
 
 
 module.exports = router

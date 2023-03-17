@@ -8,6 +8,8 @@ const path = require("path") // esse modulo serve para manipular pastas assim ch
 const mongoose = require("mongoose")
 const session = require("express-session")
 const flash = require("connect-flash")
+require("./models/Postagem")
+const Postagem = mongoose.model("postagens")
 
 //Configurações
 // Sessão
@@ -44,18 +46,31 @@ mongoose.connect("mongodb://localhost/blogapp").then(() => {
 app.use(express.static(path.join(__dirname, "public")))
 
 app.use((req, res, next) => {
-    console.log("Oi eu sou um Middleware")
+   // console.log("Oi eu sou um Middleware")
     next()
 })
 
 // Rotas
 // o prefixo que estimer na barra vai ter que ser passado! Ex; /params
 //app.use('/params', admin) // http://localhost:8081/params/categorias
+
+
+app.get('/', (req, res) => {
+    Postagem.find().lean().populate("categoria").sort({ data: "desc" }).then((postagens) => {
+        
+        res.render("index", {postagens:postagens})
+    }).catch((err) => {
+        req.flash("error_msg", "Houve um erro interno")
+        res.redirect("/404")
+    })
+}) 
+
+app.get("/404", (req, res) => {
+    res.send("Erro 404")
+})
+
 app.use('/', admin)
 // rota sem prefixo
-// app.get('/', (req, res) => {
-//     res.send('Rota principal') 
-// }) 
 
 
 // OUtros 
