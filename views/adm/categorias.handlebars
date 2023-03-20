@@ -1,6 +1,6 @@
 <h2>Lista de categorias</h2>
 <hr>
-<a href="categorias/add"> <button class="btn btn-success mt-4">Nova categoria</button> </a>
+<a href="/adm/categorias/add"> <button class="btn btn-success mt-4">Nova categoria</button> </a>
 
 {{#each categorias}}
 <div class="card mt-4">
@@ -8,8 +8,8 @@
         <h4> {{nome}} </h4>
         <small> Slug: {{slug}} </small><br>
         <small>Data de criação: {{date}}  </small> <br>
-        <a href="/categorias/edit/{{_id}}" > <button class="btn btn-success mt-2" >Editar categoria</button></a>
-        <form action="/categorias/deletar" method="POST" >
+        <a href="/adm/categorias/edit/{{_id}}" > <button class="btn btn-success mt-2" >Editar categoria</button></a>
+        <form action="/adm/categorias/deletar" method="POST" >
             <input type="hidden" name="id" value="{{_id}}" > 
             <button type="submit" class="btn btn-danger mt-3" >Deletar categoria</button>
         </form>    

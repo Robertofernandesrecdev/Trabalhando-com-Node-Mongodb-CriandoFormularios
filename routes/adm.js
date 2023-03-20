@@ -7,7 +7,7 @@ require('../models/Postagem')
 const Postagem = mongoose.model("postagens")
 
 router.get('/', (req, res) => {
-    res.render("admin/index")
+    res.render("adm/index")
 })
 
 router.get('/posts', (req, res) => {
@@ -17,18 +17,18 @@ router.get('/posts', (req, res) => {
 //.sort({date: 'desc'}) vai ordernar pela data 
 router.get("/categorias", (req, res) => {
     Categoria.find().lean().sort({date: 'desc'}).then((categorias) => {
-        res.render("admin/categorias", {categorias: categorias})
+        res.render("adm/categorias", {categorias: categorias})
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao listar categorias")
-        res.redirect("/")
+        res.redirect("/adm")
     })
 })
 
 router.get('/categorias/add', (req, res) => {
-    res.render("admin/addcategorias")
+    res.render("adm/addcategorias")
 })
 
-router.post("/admin/categorias/nova", (req, res) => {
+router.post("/categorias/nova", (req, res) => {
 
     //validação
     var erros = []
@@ -43,7 +43,7 @@ router.post("/admin/categorias/nova", (req, res) => {
         erros.push({ texto: "Nome muito pequeno" })
     }
     if (erros.length > 0) {
-        res.render("admin/addcategorias", { erros: erros }) // chamar a estrutura {{#each erros}} em addcategorias
+        res.render("adm/addcategorias", { erros: erros }) // chamar a estrutura {{#each erros}} em addcategorias
     } else {
         const novaCategoria = {
             nome: req.body.nome,
@@ -52,7 +52,7 @@ router.post("/admin/categorias/nova", (req, res) => {
         new Categoria(novaCategoria).save().then(() => {
             //console.log("Categoria salva com sucesso")
             req.flash("success_msg", "Categoria criada com sucesso")
-            res.redirect("/categorias")
+            res.redirect("/adm/categorias")
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao salvar a categoria")
            // console.log("Erro ao salvar cartegoria")
@@ -64,11 +64,11 @@ router.post("/admin/categorias/nova", (req, res) => {
 router.get("/categorias/edit/:id", (req, res) => {
     // res.send("Página de edição de categoria")
     Categoria.findOne({ _id: req.params.id }).lean().then((categoria) => {
-        res.render("admin/editcategorias", {categoria:categoria })
+        res.render("adm/editcategorias", {categoria:categoria })
     }).catch((err) => {
         req.flash("error_msg", "Esta categoria não existe")
-        res.redirect("admin/categorias")
-       // res.render("admin/editcategorias")
+        res.redirect("adm/categorias")
+       // res.render("adm/editcategorias")
     })
 })
 
@@ -88,7 +88,7 @@ router.post("/categorias/edit", (req, res) => {
         erros.push({ texto: "Nome muito pequeno" })
     }
     if (erros.length > 0) {
-        res.render("admin/addcategorias", { erros: erros }) // chamar a estrutura {{#each erros}} em addcategorias
+        res.render("adm/addcategorias", { erros: erros }) // chamar a estrutura {{#each erros}} em addcategorias
     } else {
         const editCategoria = {
             nome: req.body.nome,
@@ -100,14 +100,14 @@ router.post("/categorias/edit", (req, res) => {
 
             categoria.save().then(() => {
                 req.flash("success_msg", "Categoria editada com sucesso")
-                res.redirect("/categorias")
+                res.redirect("/adm/categorias")
             }).catch((err) => {
                 req.flash("error_msg", "Houve um erro ao salvar a edição")
-                res.redirect("/categorias")
+                res.redirect("/adm/categorias")
             })
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao editar a categoria")
-            res.redirect("/categorias")
+            res.redirect(" /adm/categorias")
         })
     }
 })
@@ -115,16 +115,16 @@ router.post("/categorias/edit", (req, res) => {
 router.post("/categorias/deletar", (req, res) => {
     Categoria.deleteOne({ _id: req.body.id }).then(() => {
         req.flash("success_msg", "Categoria Deletada com sucesso")
-        res.redirect("/categorias")
+        res.redirect("/adm/categorias")
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao Deletar")
-        res.redirect("/categorias")
+        res.redirect("/adm/categorias")
     })
 })
     
 router.get("/postagens", (req, res) => {
     Postagem.find().lean().populate("categoria").sort({ data: "desc" }).then((postagens) => {
-        res.render("admin/postagens", {postagens: postagens})
+        res.render("adm/postagens", {postagens: postagens})
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao listar as postagens")
         res.redirect("/")
@@ -134,7 +134,7 @@ router.get("/postagens", (req, res) => {
 router.get("/postagens/add", (req, res) => {
     Categoria.find().lean().then((categorias) => {
         
-        res.render("admin/addpostagens", {categorias:categorias })
+        res.render("adm/addpostagens", {categorias:categorias })
     }).catch((err) => {
         res.flash("error_msg", "Houve um erro ao carregar o formulário")
         res.redirect("/")
@@ -170,7 +170,7 @@ router.post("/postagens/nova", (req, res) => {
         erros.push({texto: "Não a categorias cadastradas!"})
     }
     if (erros.length > 0) {
-        res.render("admin/addpostagens", {erros: erros})
+        res.render("adm/addpostagens", {erros: erros})
     } else {
         const novaPostagem = {
             titulo: req.body.titulo,
@@ -182,10 +182,10 @@ router.post("/postagens/nova", (req, res) => {
 
         new Postagem(novaPostagem).save().then(() => {
             req.flash("success_msg", "Postagem criada com sucesso")
-            res.redirect("/postagens")
+            res.redirect("/adm/postagens")
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao salvar a postagem")
-            res.redirect("/postagens")
+            res.redirect("/adm/postagens")
         })
     }
 })
@@ -195,15 +195,15 @@ router.get("/postagens/edit/:id", (req, res) => {
     Postagem.findOne({ _id: req.params.id }).lean().then((postagem) => {
         
         Categoria.find().lean().then((categorias) => {
-            res.render("admin/editpostagens", {categorias: categorias, postagem: postagem} )
+            res.render("adm/editpostagens", {categorias: categorias, postagem: postagem} )
         }).catch((err) => {
             req.flash("error_msg", "Houve um erro ao listar categorias")
-            res.redirect("/postagens")
+            res.redirect("/adm/postagens")
         })
 
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao carregar o form/edição")
-        res.redirect("/postagens")
+        res.redirect("/adm/postagens")
     })
     
 })
@@ -239,7 +239,7 @@ router.post("/postagem/edit", (req, res) => {
     }
     
     if (erros.length > 0) {
-        res.render("admin/addpostagens", { erros: erros })
+        res.render("adm/addpostagens", { erros: erros })
     } else {
         const editPostagem = {
             titulo: req.body.titulo,
@@ -259,16 +259,16 @@ router.post("/postagem/edit", (req, res) => {
 
             postagem.save().then(() => {
                 req.flash("success_msg", "Postagem editada com sucesso")
-                res.redirect("/postagens")
+                res.redirect("/adm/postagens")
             }).catch((err) => {
                 req.flash("error_msg", "Erro interno")
-                res.redirect("/postagens")
+                res.redirect("/adm/postagens")
             })
 
         }).catch((err) => {
            // console.log(err)
             req.flash("error_msg", "Houve um erro ao salvar a edição")
-            res.redirect("/postagens")
+            res.redirect("/adm/postagens")
         })
     
     }
@@ -286,10 +286,10 @@ router.post("/postagens/deletar", (req, res) => {
     Postagem.deleteOne({ _id: req.body.id }).then(() => {
        
         req.flash("success_msg", "Postagem Deletada com sucesso")
-        res.redirect("/postagens")
+        res.redirect("/adm/postagens")
     }).catch((err) => {
         req.flash("error_msg", "Houve um erro ao Deletar")
-        res.redirect("/postagens")
+        res.redirect("/adm/postagens")
     })
 })
 
