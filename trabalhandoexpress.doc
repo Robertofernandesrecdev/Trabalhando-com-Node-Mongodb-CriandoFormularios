@@ -20,3 +20,7 @@ Documentação do bootstrap
  npm install --save connect-flash
 
  carrear esses modulos no servidor 
+
+ para gerar hash usar a biblioteca bcryptjs
+
+ npm install --save bcryptjs 
