@@ -52,7 +52,7 @@ app.set('view engine', 'handlebars');
 // Mongoose **** conectando ao mongodb
 const NODE_ENV =process.env.NODE_ENV;
 mongoose.Promise = global.Promise;
-mongoose.connect(NODE_ENV).then(() => {
+mongoose.connect(db.mongoURI).then(() => {
     console.log("Conectado ao mongo")
 }).catch((err) => {
     console.log("Erro ao se conectar" + err)
