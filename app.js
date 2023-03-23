@@ -15,6 +15,10 @@ const Categoria = mongoose.model("categorias")
 const user = require("./routes/user")
 const passport = require("passport")
 require("./config/auth")(passport)
+const dotenv = require("dotenv");
+dotenv.config();
+const db = require("./config/db");
+
 
 //Configurações
 // Sessão
@@ -38,6 +42,7 @@ app.use((req, res, next) => {
 }) // após criar a validação nas rotas!
 
 
+
 // Body Parser
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
@@ -45,8 +50,9 @@ app.use(bodyParser.json())
 app.engine('handlebars', handlebars.engine({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars');
 // Mongoose **** conectando ao mongodb
+const NODE_ENV =process.env.NODE_ENV;
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost/blogapp").then(() => {
+mongoose.connect(NODE_ENV).then(() => {
     console.log("Conectado ao mongo")
 }).catch((err) => {
     console.log("Erro ao se conectar" + err)
@@ -136,6 +142,7 @@ app.use("/usuarios", user)
 
 
 // OUtros 
+
 const PORT =  process.env.PORT ||  8089
 app.listen(PORT, () => {
     console.log("Servidor rodando.")
