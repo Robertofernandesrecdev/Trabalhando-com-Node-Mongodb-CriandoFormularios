@@ -40,13 +40,12 @@ module.exports = function (passport) {
     })
 
     passport.deserializeUser((id, done) => {
-        Usuario.findOne({ where: { id: id } }).then((usuario) => {
+        Usuario.findOne({ where: { _id: id } }).then((usuario) => {
             done(null, usuario)
         }).catch((err) => {
             done(err, null)
         })
     })
-
 
   
 }   

@@ -5,7 +5,8 @@ require("../models/Categoria")
 const Categoria = mongoose.model("categorias")
 require('../models/Postagem')
 const Postagem = mongoose.model("postagens")
-const {eAdmin} = require("../helpers/eAdmin")
+const { eAdmin } = require("../helpers/eAdmin")
+
 
 router.get('/', eAdmin, (req, res) => {
     res.render("adm/index")
@@ -123,7 +124,7 @@ router.post("/categorias/deletar", eAdmin, (req, res) => {
     })
 })
     
-router.get("/postagens", eAdmin, (req, res) => {
+router.get("/postagens",  (req, res) => {
     Postagem.find().lean().populate("categoria").sort({ data: "desc" }).then((postagens) => {
         res.render("adm/postagens", {postagens: postagens})
     }).catch((err) => {
@@ -132,7 +133,7 @@ router.get("/postagens", eAdmin, (req, res) => {
     })
 })
 
-router.get("/postagens/add", eAdmin, (req, res) => {
+router.get("/postagens/add",  (req, res) => {
     Categoria.find().lean().then((categorias) => {
         
         res.render("adm/addpostagens", {categorias:categorias })
@@ -142,7 +143,7 @@ router.get("/postagens/add", eAdmin, (req, res) => {
     })
 })
 
-router.post("/postagens/nova", eAdmin, (req, res) => {
+router.post("/postagens/nova",  (req, res) => {
     var erros = []
 
     if (!req.body.titulo || typeof req.body.titulo == undefined || req.body.titulo == null) {
@@ -191,7 +192,7 @@ router.post("/postagens/nova", eAdmin, (req, res) => {
     }
 })
 
-router.get("/postagens/edit/:id", eAdmin, (req, res) => {
+router.get("/postagens/edit/:id", (req, res) => {
 
     Postagem.findOne({ _id: req.params.id }).lean().then((postagem) => {
         
@@ -209,7 +210,7 @@ router.get("/postagens/edit/:id", eAdmin, (req, res) => {
     
 })
 
-router.post("/postagem/edit", eAdmin,  (req, res) => {
+router.post("/postagem/edit",   (req, res) => {
 
     var erros = []
 
@@ -283,7 +284,7 @@ router.post("/postagem/edit", eAdmin,  (req, res) => {
 //     })
 // })
 
-router.post("/postagens/deletar", eAdmin, (req, res) => {
+router.post("/postagens/deletar", (req, res) => {
     Postagem.deleteOne({ _id: req.body.id }).then(() => {
        
         req.flash("success_msg", "Postagem Deletada com sucesso")
