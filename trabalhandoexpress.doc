@@ -24,3 +24,13 @@ Documentação do bootstrap
  para gerar hash usar a biblioteca bcryptjs
 
  npm install --save bcryptjs 
+
+ passport middleware de autenticação https://www.passportjs.org/
+ vc consegue fazer diversos tipos de autenticação usando então as estrategias,
+ como autenticação do google e outros!
+
+ npm install --save passport
+ depois passa a estrategia que vc deseja trabalhar 
+ npm install --save passport-local
+
+ criar pasta config e cofigurar o 
