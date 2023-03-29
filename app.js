@@ -15,6 +15,7 @@ const Categoria = mongoose.model("categorias")
 const user = require("./routes/user")
 const passport = require("passport")
 require("./config/auth")(passport)
+require('dotenv').config()
 const dotenv = require("dotenv");
 dotenv.config();
 const db = require("./config/db");
