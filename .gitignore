@@ -3,8 +3,7 @@ node_modules
 
 .env
 
-/config/db
 
-NODE_ENV
 
-/env
+
+
